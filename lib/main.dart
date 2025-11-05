@@ -4,7 +4,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'routes/app_routes.dart';
 import 'views/splash_screen.dart';
 import 'controllers/auth_controller.dart';
-import 'firebase_options.dart'; // FlutterFire CLI auto generated
+import 'firebase_options.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -19,6 +19,8 @@ void main() async {
 }
 
 class SmartShopApp extends StatelessWidget {
+  const SmartShopApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
@@ -26,7 +28,7 @@ class SmartShopApp extends StatelessWidget {
       title: "Smart Shop",
       theme: ThemeData(
         primarySwatch: Colors.deepPurple,
-        fontFamily: 'Roboto',
+        fontFamily: 'Poppins',
       ),
       initialRoute: AppRoutes.splash,
       getPages: AppRoutes.routes,
