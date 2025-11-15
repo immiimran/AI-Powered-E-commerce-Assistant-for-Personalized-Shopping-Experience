@@ -4,6 +4,8 @@ import '../../const/colors.dart';
 class AITab extends StatelessWidget {
   final TextEditingController queryController = TextEditingController();
 
+  AITab({super.key});
+
   @override
   Widget build(BuildContext context) {
     double w = MediaQuery.of(context).size.width;
@@ -48,7 +50,7 @@ class AITab extends StatelessWidget {
             // Button
             ElevatedButton(
               onPressed: () {
-                // TODO: Integrate AI Recommendation Logic
+              
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(content: Text("AI is thinking...")),
                 );

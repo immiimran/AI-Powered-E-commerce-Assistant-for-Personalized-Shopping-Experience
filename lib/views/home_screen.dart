@@ -7,6 +7,7 @@ import 'tab/ai_tab.dart';
 import 'tab/home_tab.dart';
 
 
+// ignore: use_key_in_widget_constructors
 class HomeScreen extends StatelessWidget {
   final HomeController controller = Get.put(HomeController());
 
@@ -18,6 +19,7 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // ignore: unused_local_variable
     double w = MediaQuery.of(context).size.width;
 
     return Scaffold(

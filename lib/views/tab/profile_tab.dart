@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import '../../controllers/auth_controller.dart';
 import '../../const/colors.dart';
 
 class ProfileTab extends StatelessWidget {
   final user = AuthController.instance.auth.currentUser;
+
+   ProfileTab({super.key});
 
   @override
   Widget build(BuildContext context) {

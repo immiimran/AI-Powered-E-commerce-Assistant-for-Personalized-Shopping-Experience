@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import '../../const/colors.dart';
 
 class HomeTab extends StatelessWidget {
+  const HomeTab({super.key});
+
   @override
   Widget build(BuildContext context) {
     double w = MediaQuery.of(context).size.width;
