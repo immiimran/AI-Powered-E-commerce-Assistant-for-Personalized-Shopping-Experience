@@ -17,7 +17,6 @@ class _SplashScreenState extends State<SplashScreen> {
   void initState() {
     super.initState();
 
-    // Wait for 3 seconds then navigate
     Timer(const Duration(seconds: 3), () {
       Get.offNamed(AppRoutes.login);
     });
