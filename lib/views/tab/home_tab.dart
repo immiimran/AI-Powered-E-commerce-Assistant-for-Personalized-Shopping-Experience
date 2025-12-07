@@ -1,16 +1,21 @@
+import 'dart:io';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:smart_shop/controllers/ai_controller.dart';
+import 'package:smart_shop/views/ai_result_screen.dart';
 import '../../const/colors.dart';
 
 class HomeTab extends StatelessWidget {
   HomeTab({super.key});
 
+  final AIController aiController = Get.put(AIController());
   final RxInt currentSlide = 0.obs;
 
   final List<String> bannerImages = [
-    "assets/images/banner1.jpg"
-        "assets/images/b2.jpg",
+    "assets/images/b2.jpg",
+    "assets/images/banner1.jpg",
     "assets/images/banner3.png",
   ];
 
@@ -23,6 +28,25 @@ class HomeTab extends StatelessWidget {
 
   final List<String> filters = ["All", "Newest", "Popular", "Clothes"];
   final RxString selectedFilter = "All".obs;
+
+  // PICK IMAGE FUNCTION
+
+  Future<void> pickImage() async {
+    final ImagePicker picker = ImagePicker();
+
+    final XFile? file = await picker.pickImage(source: ImageSource.gallery);
+
+    if (file != null) {
+      File imageFile = File(file.path);
+
+      Get.snackbar("Uploading", "Analyzing Image...",
+          colorText: Colors.white, snackPosition: SnackPosition.BOTTOM);
+
+      await aiController.getAIRecommendationByImage(imageFile);
+
+      Get.to(() => AIResultPage());
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -37,6 +61,8 @@ class HomeTab extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             SizedBox(height: h * 0.08),
+
+            // TOP BAR
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -47,7 +73,7 @@ class HomeTab extends StatelessWidget {
                     Text(
                       "IIT, Jahangirnagar University",
                       style:
-                          TextStyle(color: Colors.white, fontSize: w * 0.045),
+                          TextStyle(color: Colors.white, fontSize: w * 0.042),
                     ),
                     Icon(Icons.keyboard_arrow_down, color: Colors.white),
                   ],
@@ -58,39 +84,61 @@ class HomeTab extends StatelessWidget {
 
             SizedBox(height: h * 0.02),
 
-            // Search Bar
-            Container(
-              padding: EdgeInsets.symmetric(horizontal: 12),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(14),
-              ),
-              child: TextField(
-                decoration: InputDecoration(
-                  hintText: "Search",
-                  hintStyle: TextStyle(color: Colors.grey),
-                  border: InputBorder.none,
-                  icon: Icon(Icons.search, color: Colors.grey),
+            // SEARCH BAR + CAMERA BUTTON
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Container(
+                  width: w * 0.75,
+                  padding: EdgeInsets.symmetric(horizontal: 12),
+                  decoration: BoxDecoration(
+                    color: Colors.white.withOpacity(0.2),
+                    borderRadius: BorderRadius.circular(14),
+                  ),
+                  child: TextField(
+                    decoration: InputDecoration(
+                      hintText: "Search",
+                      hintStyle: TextStyle(color: Colors.grey),
+                      border: InputBorder.none,
+                      icon: Icon(Icons.search, color: Colors.grey),
+                    ),
+                  ),
                 ),
-              ),
+
+                // CAMERA ICON
+                InkWell(
+                  onTap: pickImage,
+                  child: Container(
+                    width: w * 0.13,
+                    padding: EdgeInsets.all(12),
+                    decoration: BoxDecoration(
+                      color: primaryColor.withOpacity(0.5),
+                      borderRadius: BorderRadius.circular(14),
+                    ),
+                    child: Icon(Icons.camera_alt_rounded, color: Colors.white),
+                  ),
+                )
+              ],
             ),
 
             SizedBox(height: h * 0.02),
 
-            // Slider
+            // BANNER SLIDER
             Obx(() => Column(
                   children: [
                     CarouselSlider(
-                      items: bannerImages
-                          .map((img) => Container(
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(20),
-                                  image: DecorationImage(
-                                      image: AssetImage(img),
-                                      fit: BoxFit.cover),
-                                ),
-                              ))
-                          .toList(),
+                      items: bannerImages.map((img) {
+                        return Container(
+                          width: MediaQuery.of(context).size.width,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(12),
+                            image: DecorationImage(
+                              image: AssetImage(img),
+                              fit: BoxFit.cover,
+                            ),
+                          ),
+                        );
+                      }).toList(),
                       options: CarouselOptions(
                         height: h * 0.22,
                         autoPlay: true,
@@ -101,8 +149,7 @@ class HomeTab extends StatelessWidget {
                         },
                       ),
                     ),
-
-                    // slider indicators
+                    SizedBox(height: h * 0.02),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: List.generate(
@@ -125,7 +172,7 @@ class HomeTab extends StatelessWidget {
 
             SizedBox(height: h * 0.025),
 
-            // 📂 Categories
+            // CATEGORIES
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: categories.map((cat) {
@@ -148,7 +195,7 @@ class HomeTab extends StatelessWidget {
 
             SizedBox(height: h * 0.03),
 
-            // Flash Sale
+            // FLASH SALE TITLE
             Text(
               "Flash Sale",
               style: TextStyle(
@@ -158,7 +205,7 @@ class HomeTab extends StatelessWidget {
             ),
             SizedBox(height: 10),
 
-            // Filter Chips
+            // FILTER CHIPS
             Obx(() => Wrap(
                   spacing: 10,
                   children: filters.map((f) {
@@ -168,9 +215,10 @@ class HomeTab extends StatelessWidget {
                       selectedColor: primaryColor,
                       backgroundColor: Colors.white24,
                       labelStyle: TextStyle(
-                          color: selectedFilter.value == f
-                              ? Colors.grey[800]
-                              : Colors.grey[600]),
+                        color: selectedFilter.value == f
+                            ? Colors.grey[800]
+                            : Colors.grey[400],
+                      ),
                       onSelected: (_) => selectedFilter.value = f,
                     );
                   }).toList(),
@@ -178,7 +226,7 @@ class HomeTab extends StatelessWidget {
 
             SizedBox(height: h * 0.02),
 
-            // Flash Sale Products
+            // FLASH SALE PRODUCTS (Dummy)
             SizedBox(
               height: h * 0.23,
               child: ListView.builder(

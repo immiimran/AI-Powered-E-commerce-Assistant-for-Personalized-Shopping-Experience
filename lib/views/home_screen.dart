@@ -2,11 +2,13 @@
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:smart_shop/views/tab/chat_tab.dart';
 import '../controllers/home_controller.dart';
 import '../const/colors.dart';
 
 // Your screens
 import 'tab/ai_tab.dart';
+import 'tab/cart_tab.dart';
 import 'tab/home_tab.dart';
 import 'tab/profile_tab.dart';
 
@@ -16,11 +18,11 @@ class HomeScreen extends StatelessWidget {
   final HomeController controller = Get.put(HomeController());
 
   final List<Widget> screens = [
-    HomeTab(),   // 0
-    AITab(),     // 1
-    Container(), // 2 (Floating button dummy)
-    Container(), // 3 Cart
-    ProfileTab(),// 4 Chat/Profile
+    HomeTab(), // 0
+    AITab(), // 1
+    CartTab(), // 2 (Floating button dummy)
+    ChatTab(), // 3 Cart
+    ProfileTab(), // 4 Chat/Profile
   ];
 
   @override
@@ -29,12 +31,10 @@ class HomeScreen extends StatelessWidget {
 
     return Scaffold(
       backgroundColor: bgColor,
-
       body: Obx(() => screens[controller.currentIndex.value]),
-
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       floatingActionButton: FloatingActionButton(
-        backgroundColor: primaryColor,
+        backgroundColor: primaryColor.withOpacity(0.9),
         elevation: 4,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(100),
@@ -42,9 +42,8 @@ class HomeScreen extends StatelessWidget {
         onPressed: () {
           controller.changeTab(2);
         },
-        child: Icon(Icons.add, size: 32),
+        child: Icon(Icons.shopping_bag_outlined, size: 32),
       ),
-
       bottomNavigationBar: Obx(() {
         return Container(
           padding: EdgeInsets.symmetric(horizontal: w * 0.04),
@@ -56,11 +55,10 @@ class HomeScreen extends StatelessWidget {
               Positioned.fill(
                 child: Container(
                   decoration: BoxDecoration(
-                    color: Colors.white,
+                    color: Colors.white.withOpacity(0.1),
                     borderRadius: BorderRadius.circular(22),
                     boxShadow: [
                       BoxShadow(
-                        
                         color: Colors.black.withOpacity(0.12),
                         blurRadius: 12,
                         offset: Offset(0, 4),
@@ -76,7 +74,7 @@ class HomeScreen extends StatelessWidget {
                 children: [
                   _navItem(
                     index: 0,
-                    icon: Icons.home_filled,
+                    icon: Icons.home_rounded,
                     label: "Home",
                     controller: controller,
                   ),
@@ -86,20 +84,17 @@ class HomeScreen extends StatelessWidget {
                     label: "AI",
                     controller: controller,
                   ),
-
-                  /// spacing for FAB
                   SizedBox(width: 55),
-
                   _navItem(
                     index: 3,
-                    icon: Icons.shopping_cart,
-                    label: "Cart",
+                    icon: Icons.chat_bubble_outline,
+                    label: "Chat",
                     controller: controller,
                   ),
                   _navItem(
                     index: 4,
-                    icon: Icons.chat_bubble,
-                    label: "Chat",
+                    icon: Icons.person_outline,
+                    label: "Profile",
                     controller: controller,
                   ),
                 ],

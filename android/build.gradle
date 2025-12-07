@@ -7,6 +7,14 @@ allprojects {
 
 rootProject.buildDir = "../build"
 subprojects {
+    configurations.all {
+            resolutionStrategy {               
+                force 'org.bouncycastle:bcprov-jdk18on:1.79'
+                force 'androidx.activity:activity:1.9.3'
+                force 'androidx.activity:activity-ktx:1.9.3'
+            }
+        }
+    
     project.buildDir = "${rootProject.buildDir}/${project.name}"
 }
 subprojects {

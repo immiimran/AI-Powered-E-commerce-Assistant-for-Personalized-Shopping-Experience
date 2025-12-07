@@ -18,8 +18,9 @@ class AITab extends StatelessWidget {
       body: Padding(
         padding: EdgeInsets.all(w * 0.05),
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text("Smart AI Assistant 🤖",
+            Text("Smart AI Assistants",
                 style: TextStyle(
                     color: Colors.white,
                     fontSize: w * 0.06,
