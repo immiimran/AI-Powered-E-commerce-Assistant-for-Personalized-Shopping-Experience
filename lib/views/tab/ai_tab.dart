@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import '../../const/colors.dart';
+import '../../controllers/ai_controller.dart';
 
+// ignore: use_key_in_widget_constructors
 class AITab extends StatelessWidget {
   final TextEditingController queryController = TextEditingController();
-
-  AITab({super.key});
+  final AIController aiController = Get.put(AIController());
 
   @override
   Widget build(BuildContext context) {
@@ -23,50 +25,60 @@ class AITab extends StatelessWidget {
                     fontSize: w * 0.06,
                     fontWeight: FontWeight.bold)),
             SizedBox(height: h * 0.02),
-            Text(
-              "Ask AI to suggest the best products for you!",
-              style: TextStyle(color: Colors.white70, fontSize: w * 0.04),
-              textAlign: TextAlign.center,
-            ),
-            SizedBox(height: h * 0.04),
 
-            // Input box
             TextField(
               controller: queryController,
               style: TextStyle(color: Colors.white),
               decoration: InputDecoration(
-                hintText: "e.g. Suggest a smartwatch under 5000৳",
+                hintText:
+                    "Ask AI something... (e.g. Best smartwatch under 5000)",
                 hintStyle: TextStyle(color: Colors.white54),
                 filled: true,
                 fillColor: listTileColor,
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
-                  borderSide: BorderSide(color: borderColor),
-                ),
+                border:
+                    OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
               ),
             ),
+
             SizedBox(height: h * 0.03),
 
-            // Button
-            ElevatedButton(
-              onPressed: () {
-              
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text("AI is thinking...")),
-                );
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: primaryColor,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10),
-                ),
-              ),
-              child: Padding(
-                padding: EdgeInsets.symmetric(
-                    horizontal: w * 0.1, vertical: h * 0.015),
-                child: Text("Ask AI", style: TextStyle(color: Colors.white)),
-              ),
-            ),
+            Obx(() => aiController.isLoading.value
+                ? CircularProgressIndicator(color: primaryColor)
+                : ElevatedButton(
+                    onPressed: () {
+                      aiController.getAIRecommendation(
+                        queryController.text.trim(),
+                      );
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: primaryColor,
+                      padding: EdgeInsets.symmetric(
+                          horizontal: w * 0.1, vertical: h * 0.015),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                    ),
+                    child:
+                        Text("Ask AI", style: TextStyle(color: Colors.white)),
+                  )),
+
+            SizedBox(height: h * 0.03),
+
+            // AI Response Box
+            Obx(() => aiController.aiResponse.value.isEmpty
+                ? SizedBox()
+                : Container(
+                    padding: EdgeInsets.all(16),
+                    decoration: BoxDecoration(
+                      color: listTileColor,
+                      borderRadius: BorderRadius.circular(12),
+                      border: Border.all(color: borderColor),
+                    ),
+                    child: Text(
+                      aiController.aiResponse.value,
+                      style: TextStyle(color: Colors.white, fontSize: w * 0.04),
+                    ),
+                  )),
           ],
         ),
       ),

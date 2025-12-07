@@ -27,7 +27,7 @@ class LoginScreen extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 SvgPicture.asset("assets/images/undraw_unlock_m0yr.svg",
-                    height: h * 0.25),
+                    height: h * 0.30),
                 SizedBox(height: h * 0.02),
                 Text(
                   "Welcome Back! 👋",
@@ -80,6 +80,15 @@ class LoginScreen extends StatelessWidget {
                       borderRadius: BorderRadius.circular(12),
                     ),
                   ),
+                ),
+                SizedBox(height: h * 0.01),
+                Align(
+                  alignment: Alignment.centerRight,
+                  child: Text("Forgot Password?",
+                      style: TextStyle(
+                        color: Colors.redAccent,
+                        fontSize: w * 0.03,
+                      )),
                 ),
                 SizedBox(height: h * 0.05),
 
